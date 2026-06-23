@@ -1,0 +1,12 @@
+export const CARD_WIDTH = 420;
+export const CARD_HEIGHT = 610;
+export const CARD_RADIUS = 18;
+export const PREVIEW_SCALE = 0.85;
+export const ART_AREA = { x: 21, y: 80, width: 378, height: 270 };
+export const SKILL_AREA = { x: 24, y: 370, width: 372, maxHeight: 180 };
+export const HP_AREA = { x: 310, y: 350, iconSize: 26, spacing: 4 };
+export const ARMOR_AREA = { x: 310, y: 376, iconSize: 20, spacing: 3 };
+export const FACTION_ICON = { x: 20, y: 18, size: 42 };
+export const TITLE_POS = { x: 210, y: 55, fontSize: 22 };
+export const NAME_POS = { x: 210, y: 32, fontSize: 28 };
+export const COPYRIGHT_Y = 588;

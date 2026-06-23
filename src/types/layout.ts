@@ -1,0 +1,29 @@
+export interface LayoutParams {
+  artX: number;
+  artY: number;
+  artWidth: number;
+  artHeight: number;
+  artScale: number;
+  artOffsetX: number;
+  artOffsetY: number;
+  titleX: number;
+  titleY: number;
+  titleFontSize: number;
+  nameX: number;
+  nameY: number;
+  nameFontSize: number;
+  skillStartY: number;
+  skillFontSize: number;
+  skillLineHeight: number;
+  hpX: number;
+  hpY: number;
+  hpIconSize: number;
+  armorX: number;
+  armorY: number;
+  armorIconSize: number;
+  factionIconX: number;
+  factionIconY: number;
+  factionIconSize: number;
+  copyrightY: number;
+  copyrightFontSize: number;
+}

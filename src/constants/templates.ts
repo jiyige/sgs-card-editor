@@ -1,0 +1,58 @@
+import type { CardTemplate } from '../types/template';
+
+export const CARD_TEMPLATES: CardTemplate[] = [
+  {
+    id: 'standard',
+    name: '标准模板',
+    description: '经典武将卡牌样式',
+    dimensions: { width: 420, height: 610 },
+    defaultLayout: {
+      artX: 21, artY: 80, artWidth: 378, artHeight: 270,
+      artScale: 1, artOffsetX: 0, artOffsetY: 0,
+      titleX: 210, titleY: 55, titleFontSize: 22,
+      nameX: 210, nameY: 32, nameFontSize: 28,
+      skillStartY: 380, skillFontSize: 13, skillLineHeight: 18,
+      hpX: 310, hpY: 350, hpIconSize: 26, armorX: 310, armorY: 376, armorIconSize: 20,
+      factionIconX: 20, factionIconY: 18, factionIconSize: 42,
+      copyrightY: 588, copyrightFontSize: 10,
+    },
+    applicableFactions: ['wei', 'shu', 'wu', 'qun', 'shen', 'jin'],
+    supportsDualFaction: false,
+  },
+  {
+    id: 'god',
+    name: '神势力模板',
+    description: '神将专属样式，金色边框',
+    dimensions: { width: 420, height: 610 },
+    defaultLayout: {
+      artX: 21, artY: 80, artWidth: 378, artHeight: 270,
+      artScale: 1, artOffsetX: 0, artOffsetY: 0,
+      titleX: 210, titleY: 55, titleFontSize: 22,
+      nameX: 210, nameY: 32, nameFontSize: 28,
+      skillStartY: 380, skillFontSize: 13, skillLineHeight: 18,
+      hpX: 310, hpY: 350, hpIconSize: 26, armorX: 310, armorY: 376, armorIconSize: 20,
+      factionIconX: 20, factionIconY: 18, factionIconSize: 42,
+      copyrightY: 588, copyrightFontSize: 10,
+    },
+    applicableFactions: ['shen'],
+    supportsDualFaction: false,
+  },
+  {
+    id: 'double',
+    name: '双势力模板',
+    description: '支持双势力武将',
+    dimensions: { width: 420, height: 610 },
+    defaultLayout: {
+      artX: 21, artY: 80, artWidth: 378, artHeight: 270,
+      artScale: 1, artOffsetX: 0, artOffsetY: 0,
+      titleX: 210, titleY: 55, titleFontSize: 22,
+      nameX: 210, nameY: 32, nameFontSize: 28,
+      skillStartY: 380, skillFontSize: 13, skillLineHeight: 18,
+      hpX: 310, hpY: 350, hpIconSize: 26, armorX: 310, armorY: 376, armorIconSize: 20,
+      factionIconX: 20, factionIconY: 18, factionIconSize: 36,
+      copyrightY: 588, copyrightFontSize: 10,
+    },
+    applicableFactions: ['wei', 'shu', 'wu', 'qun', 'shen', 'jin'],
+    supportsDualFaction: true,
+  },
+];

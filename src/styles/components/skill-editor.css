@@ -1,0 +1,80 @@
+.skill-editor {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+  background: var(--color-bg-secondary);
+  transition: border-color var(--transition-normal);
+}
+
+.skill-editor:hover {
+  border-color: var(--color-border-light);
+}
+
+.skill-editor__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+}
+
+.skill-editor__index {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.skill-editor__row {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: flex-start;
+  margin-bottom: var(--space-sm);
+}
+
+.skill-editor__name {
+  flex: 0 0 140px;
+}
+
+.skill-editor__desc {
+  flex: 1;
+}
+
+.skill-editor__toolbar {
+  display: flex;
+  gap: 2px;
+  margin-bottom: var(--space-xs);
+  padding: 4px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-sm);
+}
+
+.skill-editor__toolbar-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+  transition: all var(--transition-fast);
+}
+
+.skill-editor__toolbar-btn:hover {
+  color: var(--color-accent-light);
+  background: rgba(201, 164, 75, 0.1);
+}
+
+.skill-editor__toolbar-btn--active {
+  color: var(--color-accent);
+  background: rgba(201, 164, 75, 0.15);
+}
+
+.skill-editor__checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}

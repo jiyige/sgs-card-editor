@@ -1,0 +1,70 @@
+:root {
+  /* 背景色 - 暗色古风基调 */
+  --color-bg-primary: #0d0d14;
+  --color-bg-secondary: #14141e;
+  --color-bg-tertiary: #1a1a28;
+  --color-bg-elevated: #1f1f32;
+  --color-bg-input: #1a1a28;
+
+  /* 强调色 - 古铜金 */
+  --color-accent: #c9a44b;
+  --color-accent-light: #e0c878;
+  --color-accent-dim: #8a6d2f;
+  --color-accent-glow: rgba(201, 164, 75, 0.3);
+
+  /* 文字色 */
+  --color-text-primary: #e8e6e0;
+  --color-text-secondary: #a8a6a0;
+  --color-text-muted: #6a6870;
+  --color-text-gold: #d4b96a;
+
+  /* 势力色 */
+  --color-wei: #5479B2;
+  --color-shu: #C43B3B;
+  --color-wu: #4A8C3F;
+  --color-qun: #8C8C8C;
+  --color-shen: #D4A843;
+  --color-jin: #7B4FA0;
+
+  /* 边框 */
+  --color-border: #2a2a3a;
+  --color-border-light: rgba(201, 164, 75, 0.2);
+  --color-border-accent: rgba(201, 164, 75, 0.5);
+
+  /* 状态色 */
+  --color-success: #4a9c5d;
+  --color-error: #c44b4b;
+  --color-warning: #c9a44b;
+  --color-info: #4b8bc4;
+
+  /* 字体 */
+  --font-display: 'Noto Serif SC', 'SimSun', 'STSong', serif;
+  --font-body: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+  --font-ancient: 'Ma Shan Zheng', 'STKaiti', 'KaiTi', cursive;
+
+  /* 间距 */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* 圆角 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* 阴影 */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-gold: 0 0 12px rgba(201, 164, 75, 0.25);
+
+  /* 过渡 */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
+}
