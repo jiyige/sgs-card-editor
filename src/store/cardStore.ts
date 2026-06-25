@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { CardData, FactionId, Skill, TemplateId, BadgeConfig, LayoutParams } from '../types';
-import { CARD_TEMPLATES } from '../constants/templates';
+import { CARD_TEMPLATES, AVAILABLE_TEMPLATES } from '../constants/templates';
+import { FACTION_PREFIX } from '../constants/factions';
 
 function generateId(): string {
   return `skill_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
@@ -18,6 +19,10 @@ function createDefaultSkill(): Skill {
 function getDefaultLayout(templateId: TemplateId): LayoutParams {
   const template = CARD_TEMPLATES.find(t => t.id === templateId);
   return template ? { ...template.defaultLayout } : { ...CARD_TEMPLATES[0].defaultLayout };
+}
+
+function getDefaultFactionNumber(faction: FactionId): string {
+  return `${FACTION_PREFIX[faction]} 001`;
 }
 
 interface CardStore extends CardData {
@@ -38,30 +43,26 @@ interface CardStore extends CardData {
 const defaultBadge: BadgeConfig = {
   type: 'builtin',
   builtinId: '',
-  position: { x: 370, y: 18 },
+  position: { x: 370, y: 560 },
   scale: 1,
 };
 
-const defaultLayout = getDefaultLayout('standard');
+const defaultLayout = getDefaultLayout('new');
 
 const initialState: CardData = {
-  template: 'standard',
+  template: 'new',
   faction: 'shu',
   subFaction: undefined,
   title: '',
   name: '',
   isLord: false,
-  hp: 3,
-  maxHp: 3,
+  hp: 4,
+  maxHp: 4,
   armor: 0,
-  titleFont: 'serif-sc',
-  titleColor: '#FFFFFF',
-  nameFont: 'serif-sc',
-  nameColor: '#FFFFFF',
-  borderColor: '',
   copyright: '',
   artist: '',
   flavor: '',
+  factionNumber: getDefaultFactionNumber('shu'),
   badge: defaultBadge,
   skills: [createDefaultSkill()],
   layout: defaultLayout,
@@ -81,7 +82,15 @@ export const useCardStore = create<CardStore>((set, get) => ({
   },
 
   setFaction: (faction) => {
-    set({ faction });
+    const currentNum = get().factionNumber;
+    const oldPrefix = FACTION_PREFIX[get().faction];
+    let newNum = currentNum;
+    if (currentNum.startsWith(oldPrefix)) {
+      newNum = currentNum.replace(oldPrefix, FACTION_PREFIX[faction]);
+    } else {
+      newNum = getDefaultFactionNumber(faction);
+    }
+    set({ faction, factionNumber: newNum });
   },
 
   setSubFaction: (faction) => {
@@ -89,6 +98,7 @@ export const useCardStore = create<CardStore>((set, get) => ({
   },
 
   setTemplate: (templateId) => {
+    if (!AVAILABLE_TEMPLATES.includes(templateId)) return;
     const newLayout = getDefaultLayout(templateId);
     const template = CARD_TEMPLATES.find(t => t.id === templateId);
     set({
@@ -123,7 +133,7 @@ export const useCardStore = create<CardStore>((set, get) => ({
   },
 
   resetAll: () => {
-    set({ ...initialState, skills: [createDefaultSkill()], layout: getDefaultLayout('standard') });
+    set({ ...initialState, skills: [createDefaultSkill()], layout: getDefaultLayout('new') });
   },
 
   importData: (data) => {
@@ -145,14 +155,10 @@ export const useCardStore = create<CardStore>((set, get) => ({
       hp: state.hp,
       maxHp: state.maxHp,
       armor: state.armor,
-      titleFont: state.titleFont,
-      titleColor: state.titleColor,
-      nameFont: state.nameFont,
-      nameColor: state.nameColor,
-      borderColor: state.borderColor,
       copyright: state.copyright,
       artist: state.artist,
       flavor: state.flavor,
+      factionNumber: state.factionNumber,
       badge: state.badge,
       skills: state.skills,
       layout: state.layout,

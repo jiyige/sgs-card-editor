@@ -2,7 +2,7 @@ import { FactionId } from './faction';
 import { Skill } from './skill';
 import { LayoutParams } from './layout';
 
-export type TemplateId = 'standard' | 'god' | 'double';
+export type TemplateId = 'new' | 'old' | 'fullart';
 
 export interface BadgeConfig {
   type: 'builtin' | 'custom';
@@ -22,14 +22,10 @@ export interface CardData {
   hp: number;
   maxHp: number;
   armor: number;
-  titleFont: string;
-  titleColor: string;
-  nameFont: string;
-  nameColor: string;
-  borderColor: string;
   copyright: string;
   artist: string;
   flavor: string;
+  factionNumber: string;
   badge: BadgeConfig;
   skills: Skill[];
   layout: LayoutParams;

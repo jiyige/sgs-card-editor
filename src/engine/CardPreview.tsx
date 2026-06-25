@@ -1,86 +1,68 @@
-import React, { useRef, useCallback } from 'react';
-import { Stage, Layer } from 'react-konva';
-import { useCardStore, useUIStore } from '../store';
-import BorderLayer from './layers/BorderLayer';
-import FactionLayer from './layers/FactionLayer';
-import TitleLayer from './layers/TitleLayer';
-import NameLayer from './layers/NameLayer';
-import HpLayer from './layers/HpLayer';
-import SkillLayer from './layers/SkillLayer';
-import CopyrightLayer from './layers/CopyrightLayer';
-import BadgeLayer from './layers/BadgeLayer';
-import ArtLayer from './layers/ArtLayer';
+import React, { useMemo, useCallback } from 'react';
+import { Stage, Layer, Rect } from 'react-konva';
+import { useCardStore, useUIStore, useArtStore } from '../store';
+import { buildCardTree } from './treeBuilder';
+import { renderObj } from './renderer';
 import { CARD_WIDTH, CARD_HEIGHT } from '../constants';
 
-interface CardPreviewProps {
-  scale?: number;
-  onStageClick?: (e: any) => void;
-  onWheel?: (e: any) => void;
-  draggable?: boolean;
-}
-
-const CardPreview: React.FC<CardPreviewProps> = ({
-  scale = 0.85,
-  onStageClick,
-  onWheel,
-  draggable = false,
-}) => {
-  const stageRef = useRef<any>(null);
-  const interactionMode = useUIStore((s) => s.interactionMode);
+const CardPreview: React.FC = () => {
+  const cardData = useCardStore();
+  const artSrc = useArtStore((s) => s.currentArt);
+  const previewScale = useUIStore((s) => s.previewScale);
   const setInteractionMode = useUIStore((s) => s.setInteractionMode);
-  const layout = useCardStore((s) => s.layout);
+  const selectedObjectId = useUIStore((s) => s.selectedObjectId);
+  const setSelectedObjectId = useUIStore((s) => s.setSelectedObjectId);
   const updateLayoutField = useCardStore((s) => s.updateLayoutField);
 
-  const stageWidth = CARD_WIDTH * scale;
-  const stageHeight = CARD_HEIGHT * scale;
+  const tree = useMemo(() => {
+    const t = buildCardTree(cardData);
+    const artObj = t.children?.find((c) => c.id === 'art');
+    if (artObj && artObj.kind === 'image') {
+      (artObj as any).src = artSrc;
+    }
+    return t;
+  }, [cardData, artSrc]);
+
+  const handleSelect = useCallback((id: string) => {
+    setSelectedObjectId(id);
+    if (id === 'art') setInteractionMode('art');
+    else if (id === 'nameArea' || id === 'title' || id === 'personName') setInteractionMode('title');
+    else setInteractionMode('none');
+  }, [setSelectedObjectId, setInteractionMode]);
 
   const handleStageClick = useCallback((e: any) => {
     if (e.target === e.target.getStage()) {
+      setSelectedObjectId(null);
       setInteractionMode('none');
-      return;
     }
-    const targetName = e.target.name?.();
-    if (targetName === 'art-layer') {
-      setInteractionMode('art');
-    } else if (targetName === 'title-layer') {
-      setInteractionMode('title');
-    } else if (targetName === 'name-layer') {
-      setInteractionMode('name');
-    }
-  }, [setInteractionMode]);
+  }, [setSelectedObjectId, setInteractionMode]);
 
-  const handleWheelInternal = useCallback((e: any) => {
-    e.evt.preventDefault();
-    if (interactionMode === 'art') {
-      const delta = e.evt.deltaY > 0 ? -0.05 : 0.05;
-      const newScale = Math.max(0.5, Math.min(2, layout.artScale + delta));
-      updateLayoutField('artScale', newScale);
-    } else {
-      onWheel?.(e);
+  const handleObjDrag = useCallback((e: any) => {
+    const { id, x, y } = e;
+    if (id === 'art') {
+      updateLayoutField('artX', Math.round(x));
+      updateLayoutField('artY', Math.round(y));
+    } else if (id === 'nameArea') {
+      updateLayoutField('nameAreaX', Math.round(x));
+      updateLayoutField('nameAreaY', Math.round(y));
     }
-  }, [interactionMode, layout.artScale, updateLayoutField, onWheel]);
+  }, [updateLayoutField]);
+
+  const stageWidth = CARD_WIDTH * previewScale;
+  const stageHeight = CARD_HEIGHT * previewScale;
 
   return (
     <Stage
       width={stageWidth}
       height={stageHeight}
-      scaleX={scale}
-      scaleY={scale}
+      scaleX={previewScale}
+      scaleY={previewScale}
       onClick={handleStageClick}
-      onWheel={handleWheelInternal}
-      draggable={draggable}
-      ref={stageRef}
+      onObjDrag={handleObjDrag as any}
     >
       <Layer>
-        <ArtLayer />
-        <BorderLayer />
-        <FactionLayer />
-        <TitleLayer />
-        <NameLayer />
-        <HpLayer />
-        <SkillLayer />
-        <CopyrightLayer />
-        <BadgeLayer />
+        <Rect x={0} y={0} width={CARD_WIDTH} height={CARD_HEIGHT} fill="#1a1520" cornerRadius={cardData.layout.cardCornerRadius || 16} />
+        {tree.children?.map((child) => renderObj(child, 0, 0, handleSelect))}
       </Layer>
     </Stage>
   );

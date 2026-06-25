@@ -16,6 +16,9 @@ interface UIStore {
   previewScale: number;
   setPreviewScale: (scale: number) => void;
 
+  selectedObjectId: string | null;
+  setSelectedObjectId: (id: string | null) => void;
+
   toasts: { id: string; message: string; type: 'success' | 'error' | 'info' }[];
   addToast: (message: string, type?: 'success' | 'error' | 'info') => void;
   removeToast: (id: string) => void;
@@ -61,6 +64,9 @@ export const useUIStore = create<UIStore>((set, get) => ({
   setInteractionMode: (mode) => set({ interactionMode: mode }),
   previewScale: 1,
   setPreviewScale: (scale) => set({ previewScale: Math.max(0.3, Math.min(3, scale)) }),
+
+  selectedObjectId: null,
+  setSelectedObjectId: (id) => set({ selectedObjectId: id }),
 
   toasts: [],
   addToast: (message, type = 'info') => {

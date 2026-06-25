@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import Accordion from './Accordion';
 import { Button } from '../ui';
-import { useArtStore, useCardStore, useUIStore } from '../../store';
+import { useArtStore, useUIStore } from '../../store';
 
 const ArtPanel: React.FC = () => {
   const expanded = useUIStore((s) => s.expandedPanels.art);
@@ -16,6 +16,7 @@ const ArtPanel: React.FC = () => {
   const addToast = useUIStore((s) => s.addToast);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [showLargePreview, setShowLargePreview] = useState(false);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -62,13 +63,7 @@ const ArtPanel: React.FC = () => {
       title="原画管理"
       expanded={expanded}
       onToggle={() => togglePanel('art')}
-      icon={
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
-          <circle cx="5" cy="6" r="1" fill="currentColor" />
-          <path d="M2 11l4-4 3 3 3-3 2 2" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      }
+      icon={<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.5" /><circle cx="5" cy="6" r="1" fill="currentColor" /><path d="M2 11l4-4 3 3 3-3 2 2" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" /></svg>}
     >
       {/* 上传区域 */}
       <div
@@ -84,38 +79,31 @@ const ArtPanel: React.FC = () => {
         </svg>
         <span className="upload-zone__text">点击或拖拽上传原画</span>
         <span className="upload-zone__hint">支持 JPG、PNG、WebP 格式</span>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleFileSelect}
-          style={{ display: 'none' }}
-        />
+        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileSelect} style={{ display: 'none' }} />
       </div>
 
-      {/* 当前原画状态 */}
+      {/* 当前原画 - 缩略图预览 */}
       {currentArt && (
         <div style={{ marginTop: 12 }}>
           <div className="form-inline form-inline--between" style={{ marginBottom: 8 }}>
             <span style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)' }}>当前原画</span>
-            <Button variant="ghost" size="sm" onClick={() => setCurrentArt(null)}>
-              清除
-            </Button>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <Button variant="ghost" size="sm" onClick={() => setShowLargePreview(true)}>查看大图</Button>
+              <Button variant="ghost" size="sm" onClick={() => setCurrentArt(null)}>清除</Button>
+            </div>
           </div>
           <div
             style={{
-              width: '100%',
-              aspectRatio: '3/2',
-              borderRadius: 8,
+              width: 120,
+              height: 80,
+              borderRadius: 6,
               overflow: 'hidden',
               border: '1px solid var(--color-border-accent)',
+              cursor: 'pointer',
             }}
+            onClick={() => setShowLargePreview(true)}
           >
-            <img
-              src={currentArt}
-              alt="当前原画"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
+            <img src={currentArt} alt="当前原画缩略图" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
         </div>
       )}
@@ -123,9 +111,7 @@ const ArtPanel: React.FC = () => {
       {/* 原画库 */}
       {artLibrary.length > 0 && (
         <div>
-          <label className="form-group__label" style={{ marginTop: 12 }}>
-            原画库 ({artLibrary.length})
-          </label>
+          <label className="form-group__label" style={{ marginTop: 12 }}>原画库 ({artLibrary.length})</label>
           <div className="art-gallery">
             {artLibrary.map((entry) => (
               <div
@@ -135,33 +121,36 @@ const ArtPanel: React.FC = () => {
               >
                 <img src={entry.dataUrl} alt={entry.name} />
                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeFromLibrary(entry.id);
-                  }}
+                  onClick={(e) => { e.stopPropagation(); removeFromLibrary(entry.id); }}
                   style={{
-                    position: 'absolute',
-                    top: 2,
-                    right: 2,
-                    width: 18,
-                    height: 18,
-                    borderRadius: '50%',
-                    background: 'rgba(0,0,0,0.6)',
-                    border: 'none',
-                    color: '#e88484',
-                    fontSize: 12,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    position: 'absolute', top: 2, right: 2, width: 18, height: 18,
+                    borderRadius: '50%', background: 'rgba(0,0,0,0.6)', border: 'none',
+                    color: '#e88484', fontSize: 12, cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}
                   title="删除"
-                >
-                  x
-                </button>
+                >x</button>
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* 大图预览弹窗 */}
+      {showLargePreview && currentArt && (
+        <div
+          onClick={() => setShowLargePreview(false)}
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            zIndex: 2000, cursor: 'pointer',
+          }}
+        >
+          <img
+            src={currentArt}
+            alt="原画大图预览"
+            style={{ maxWidth: '90vw', maxHeight: '90vh', borderRadius: 8, boxShadow: '0 8px 32px rgba(0,0,0,0.5)' }}
+          />
         </div>
       )}
     </Accordion>
